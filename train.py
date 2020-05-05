@@ -70,7 +70,7 @@ def get_train_data():
         # value = train_ds.make_one_shot_iterator().get_next()
     return train_ds
 
-def train():
+def train(n_epoch_init,n_epoch):
     G = get_G((batch_size, 96, 96, 3))
     D = get_D((batch_size, 384, 384, 3))
     VGG = tl.models.vgg19(pretrained=True, end_with='pool4', mode='static')
@@ -193,13 +193,15 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
 
     parser.add_argument('--mode', type=str, default='srgan', help='srgan, evaluate')
+    parser.add_argument('--in_epoch', type=int, default=50, help='srgan, evaluate')
+    parser.add_argument('--ad_epoch', type=int, default=100, help='srgan, evaluate')
 
     args = parser.parse_args()
 
     tl.global_flag['mode'] = args.mode
 
     if tl.global_flag['mode'] == 'srgan':
-        train()
+        train(args.in_epoch,args.ad_epoch)
     elif tl.global_flag['mode'] == 'evaluate':
         evaluate()
     else:
